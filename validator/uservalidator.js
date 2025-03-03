@@ -10,4 +10,9 @@ const userValidatorSchema = Joi.object({
   password: Joi.string().min(6).required(),
 });
 
-export { userValidatorSchema };
+const verifyRegisterSchema = Joi.object({
+  email: Joi.string().email().required(),
+  code: Joi.string().max(6).required(),
+});
+
+export { userValidatorSchema, verifyRegisterSchema };

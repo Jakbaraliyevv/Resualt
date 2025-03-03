@@ -12,6 +12,14 @@ const userSchema = new Schema(
       required: [true, "Last name is required"],
       trim: true,
     },
+    phone_number: {
+      type: String,
+      required: [true, "Phone number is required"],
+    },
+    password: {
+      type: String,
+      required: [true, "Password is required"],
+    },
     email: {
       type: String,
       required: [true, "Email is required"],

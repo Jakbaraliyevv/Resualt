@@ -1,4 +1,4 @@
-// import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 dotenv.config();
@@ -8,8 +8,8 @@ export const signInJwt = (params) => {
     expiresIn: "2h",
   });
 };
-// export const hashPassword = async (password) => {
-//   const saltRounds = 12;
-//   const hashedPassword = await bcrypt.hash(password, saltRounds);
-//   return hashedPassword;
-// };
+export const hashPassword = async (password) => {
+  const saltRounds = 12;
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
+  return hashedPassword;
+};

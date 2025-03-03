@@ -1,5 +1,6 @@
 import { CustomError } from "../errors/index.js";
 import {
+  userLoginSchema,
   userValidatorSchema,
   verifyRegisterSchema,
 } from "../validator/uservalidator.js";
@@ -28,4 +29,16 @@ const verifyRegisterSchemas = (req, res, next) => {
   }
 };
 
-export { validateUserSignup, verifyRegisterSchemas };
+const validateUserLogin = (req, res, next) => {
+  try {
+    const { error } = userLoginSchema.validate(req.body);
+    if (error) {
+      throw new CustomError(400, error.details[0].message);
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { validateUserSignup, verifyRegisterSchemas, validateUserLogin };

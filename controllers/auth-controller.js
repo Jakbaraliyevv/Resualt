@@ -2,9 +2,9 @@ import { transport } from "../config/mailer.js";
 import UserSchema from "../schema/userschema.js";
 import { hashPassword, signInJwt } from "../utils/jwt.js";
 import { ResData } from "../utils/response-data.js";
-
+import bcrypt from "bcryptjs";
 const generateVerificationCode = () => {
-  return Math.floor(100000 + Math.random() * 900000).toString(); // 6 xonali kod
+  return Math.floor(100000 + Math.random() * 900000).toString();
 };
 
 export const signUp = async (req, res, next) => {
@@ -76,6 +76,44 @@ export const verifyEmail = async (req, res, next) => {
     await user.save();
 
     res.status(200).json({ message: "Email tasdiqlandi!" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const signIn = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await UserSchema.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "Foydalanuvchi topilmadi!" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Noto‘g‘ri  parol!" });
+    }
+
+    if (!user.isVerified) {
+      return res
+        .status(403)
+        .json({ message: "Iltimos, emailingizni tasdiqlang!" });
+    }
+
+    const token = signInJwt({ id: user._id });
+
+    res.status(200).json({
+      message: "Kirish muvaffaqiyatli bajarildi!",
+      user: {
+        id: user._id,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+      },
+      token,
+    });
   } catch (error) {
     next(error);
   }

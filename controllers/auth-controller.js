@@ -9,7 +9,7 @@ const generateVerificationCode = () => {
 
 export const signUp = async (req, res, next) => {
   try {
-    const { first_name, last_name, email, phone_number, password } = req.body;
+    const { first_name, last_name, email, password } = req.body;
 
     const existingUser = await UserSchema.findOne({ email });
     if (existingUser) {
@@ -22,7 +22,6 @@ export const signUp = async (req, res, next) => {
       first_name,
       last_name,
       email,
-      phone_number,
       password: hashedPassword,
     });
 
